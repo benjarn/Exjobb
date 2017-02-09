@@ -11,6 +11,7 @@ title('Generated points and clusters')
 % Assume gaussian
 %randperm // gives random permutation of array, good for selection in
 %random order
+parameters
 N=length(x);
 % Initialize cluster partition
 partition = initializePartitions(x,N);
@@ -54,8 +55,8 @@ toc()
 %profile viewer
 
 %%%%%%%%%%%% Slow and simple %%%%%%%%%%%%%%%%
-% Plotta sista
-partition = Hypotheses{4000};
+%% Plotta sista
+partition = Hypotheses{5000};
 % Create array of points and corresponding labels
 x_new = [];
 labels_new = [];
