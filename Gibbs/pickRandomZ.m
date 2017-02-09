@@ -1,4 +1,4 @@
-function [ clusters, point, c, p ] = pickRandomZ( clusters, N )
+function [ partition, point, c, p ] = pickRandomZ( partition, N )
 %PICKRANDOMZ picks a random point and removes it from clusters
 % N = length of measurements
 % does a linear search for the selected element.
@@ -7,10 +7,10 @@ c = 0;
 p = 0;
 set = 0;
 s = 0;
-while c < length(clusters) && ~set
+while c < partition.Length && ~set
     c = c + 1;
     p=0;
-    while p < clusters{c}.Length && ~set
+    while p < partition.Clusters{c}.Length && ~set
         p = p + 1;
         s = s+1;
         if(s>=x)
@@ -20,7 +20,7 @@ while c < length(clusters) && ~set
 end
 %c = ceil(length(clusters)*rand());
 %p = ceil(clusters{c}.Length*rand());
-[clusters{c}, point] = clusters{c}.removePoint(p); % pick a point
+[partition.Clusters{c}, point] = partition.Clusters{c}.removePoint(p); % pick a point
 
 
 

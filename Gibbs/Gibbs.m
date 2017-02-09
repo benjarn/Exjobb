@@ -12,16 +12,17 @@ title('Generated points and clusters')
 %randperm // gives random permutation of array, good for selection in
 %random order
 N=length(x);
-% Initialize cluster partitions
-clusters = initializePartitions(x,N);
+% Initialize cluster partition
+partition = initializePartitions(x,N);
 
+Hypoteses = {};
 %%%%%% DEBUG PLOT
 % Create array of points and corresponding labels
 x_new = [];
 labels_new = [];
-for i=1:length(clusters)
-    for j=1:clusters{i}.Length
-        x_new=[x_new clusters{i}.Points(:,j)];
+for i=1:partition.Length
+    for j=1:partition.Clusters{i}.Length
+        x_new=[x_new partition.Clusters{i}.Points(:,j)];
         labels_new=[labels_new i];
     end
 end
@@ -36,16 +37,16 @@ tic()
 iter = 5000;
 for asd=1:iter % number of rotation of all the points
     % Randomly choose point from cluster
-    [clusters, point, c] = pickRandomZ(clusters,N); % pick a point
+    [partition, point, c] = pickRandomZ(partition,N); % pick a point
     
-    if(clusters{c}.Length==0) % delete if empty cluster
-        clusters(c)=[];
+    if(partition.Clusters{c}.Length==0) % delete if empty cluster
+        partition.removeCluster(c);
     end
     
     % point cannot exist in clusters when this is called
-    W_k = evaluateWeights(clusters,point); % Returns the weight vector for all partitions
+    W_k = evaluateWeights(partition,point); % Returns the weight vector for all partition
     
-    clusters = choosePartition(W_k,clusters); % returns the chosen partition
+    Hypotheses{length(Hypotheses)+1} = choosePartition(W_k,partition); % returns the chosen partition
 end
 % Gibbs done
 toc()
@@ -55,15 +56,15 @@ toc()
 % Create array of points and corresponding labels
 x_new = [];
 labels_new = [];
-for i=1:length(clusters)
-    if(clusters{i}.Length>1) % Removes single point clusters, good?
-        for j=1:clusters{i}.Length
-            x_new=[x_new clusters{i}.Points(:,j)];
+for i=1:length(partition)
+    if(partition{i}.Length>1) % Removes single point clusters, good?
+        for j=1:partition{i}.Length
+            x_new=[x_new partition{i}.Points(:,j)];
             labels_new=[labels_new i];
         end
     else % single point cluster
-        for j=1:clusters{i}.Length
-            x_new=[x_new clusters{i}.Points(:,j)];
+        for j=1:partition{i}.Length
+            x_new=[x_new partition{i}.Points(:,j)];
             labels_new=[labels_new 0];
         end
     end
