@@ -12,12 +12,6 @@ title('Generated points and clusters')
 %randperm // gives random permutation of array, good for selection in
 %random order
 N=length(x);
-alpha=0.1;
-S_0 = eye(2)*2;
-v_0 = 2;
-alpha_0 = 0.1;
-beta_0 = 0.2;
-
 % Initialize cluster partitions
 clusters = initializePartitions(x,N);
 
@@ -48,27 +42,8 @@ for asd=1:iter % number of rotation of all the points
         clusters(c)=[];
     end
     
-    P_new = {};
-    for k = 1:length(clusters)
-        P_new{length(P_new)+1} = clusters;
-        P_new{length(P_new)}{k}.addPoint(point);
-    end % P_new now contains all possible partitions
-    
-    c_length = length(clusters);
-    c_weigths = zeros(1,c_length+1);
-    for k=1:c_length
-        v_k = v_0 + clusters{k}.Length-1;
-        S_k = S_0 + (clusters{k}.Points-clusters{k}.Mean)*(clusters{k}.Points-clusters{k}.Mean)';
-        mu_k = clusters{k}.Mean;
-        c_k = clusters{k}.Length;
-        alpha_k = alpha_0 + c_k;
-        beta_k = beta_0 + length(clusters) + 0;
-        %c_weigths(k)=rand(); % calculate the weight to move to cluster
-        %c_weigths(k)=(clusters{k}.Length/(alpha+N-1))*mvnpdf(point',mu_k',iwishrnd(S_k,v_k));
-        c_weigths(k) = 1 * (beta_0^alpha_0*gamma(alpha_k))/(beta_k^alpha_k*gamma(alpha_0)) * (norm(S_0)^(v_0/2)*gamma(v_k/2))/(pi^(c_k-1)*sqrt(c_k)*gamma(v_0/2)*norm(S_k)^v_k/2);
-    end
-    %c_weigths(end)=alpha/(alpha+N-1); % weigth to create new cluster
-    c_weigths(end)=0;
+    % Måste ta bort point från clusters innan denna anropas...
+    W_k = evaluateWeights(clusters,point);
     
     c_weigths=c_weigths/sum(c_weigths); % normalize
     c_rand = sum(cumsum(c_weigths)<rand())+1; % pick one cluster at random
