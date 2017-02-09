@@ -7,7 +7,6 @@ figure
 plotClass(x,labels);
 title('Generated points and clusters')
 %%
-
 % Sample the distribution
 % Assume gaussian
 %randperm // gives random permutation of array, good for selection in
