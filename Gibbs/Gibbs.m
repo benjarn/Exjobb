@@ -35,7 +35,7 @@ title('Initialized clustering')
 %profile on
 tic()
 % Algorithm 1
-iter = 5000;
+iter = 9000;
 for asd=1:iter % number of rotation of all the points
     % Randomly choose point from cluster
     [partition, point, c] = pickRandomZ(partition,N); % pick a point
@@ -46,7 +46,7 @@ for asd=1:iter % number of rotation of all the points
     
     % point cannot exist in clusters when this is called
     W_k = evaluateWeights(partition,point); % Returns the weight vector for all partition
-    
+   % plot(W_k);pause(0.1)
     Hypotheses{length(Hypotheses)+1} = choosePartition(W_k,partition,point); % returns the chosen partition
     partition = Hypotheses{length(Hypotheses)};
 end
@@ -56,7 +56,7 @@ toc()
 
 %%%%%%%%%%%% Slow and simple %%%%%%%%%%%%%%%%
 %% Plotta sista
-partition = Hypotheses{5000};
+%partition = Hypotheses{5000};
 % Create array of points and corresponding labels
 x_new = [];
 labels_new = [];
