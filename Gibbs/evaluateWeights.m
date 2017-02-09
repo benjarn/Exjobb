@@ -11,14 +11,14 @@ N_1 = N;
 N_0 = 0; % What are N1 N0 ?
 for j = 1:N
     P_j = P_0; % copy the partition
-    P_j{j} = P_j{j}.addPoint(point);
+    P_j.Clusters{j} = P_j.Clusters{j}.addPoint(point);
 
     for i = 1:P_j.Length % Add the p_D to check if the cluster is out of view
         % calculate weight parameters
-        v_k = v_0 + P_j{i}.Length-1;
-        S_k = S_0 + (P_j{i}.Points-P_j{i}.Mean)*(P_j{i}.Points-P_j{i}.Mean)';
-        mu_k = P_j{i}.Mean;
-        c_k = P_j{i}.Length;
+        v_k = v_0 + P_j.Clusters{i}.Length-1;
+        S_k = S_0 + (P_j.Clusters{i}.Points-P_j.Clusters{i}.Mean)*(P_j.Clusters{i}.Points-P_j.Clusters{i}.Mean)';
+        mu_k = P_j.Clusters{i}.Mean;
+        c_k = P_j.Clusters{i}.Length;
         alpha_k = alpha_0 + c_k;
         beta_k = beta_0 + N_1 + N_0;
 

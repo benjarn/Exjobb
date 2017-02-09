@@ -15,7 +15,7 @@ N=length(x);
 % Initialize cluster partition
 partition = initializePartitions(x,N);
 
-Hypoteses = {};
+Hypotheses = {partition};
 %%%%%% DEBUG PLOT
 % Create array of points and corresponding labels
 x_new = [];
@@ -40,31 +40,34 @@ for asd=1:iter % number of rotation of all the points
     [partition, point, c] = pickRandomZ(partition,N); % pick a point
     
     if(partition.Clusters{c}.Length==0) % delete if empty cluster
-        partition.removeCluster(c);
+        partition = partition.removeCluster(c);
     end
     
     % point cannot exist in clusters when this is called
     W_k = evaluateWeights(partition,point); % Returns the weight vector for all partition
     
-    Hypotheses{length(Hypotheses)+1} = choosePartition(W_k,partition); % returns the chosen partition
+    Hypotheses{length(Hypotheses)+1} = choosePartition(W_k,partition,point); % returns the chosen partition
+    partition = Hypotheses{length(Hypotheses)};
 end
 % Gibbs done
 toc()
 %profile viewer
 
 %%%%%%%%%%%% Slow and simple %%%%%%%%%%%%%%%%
+% Plotta sista
+partition = Hypotheses{80};
 % Create array of points and corresponding labels
 x_new = [];
 labels_new = [];
-for i=1:length(partition)
-    if(partition{i}.Length>1) % Removes single point clusters, good?
-        for j=1:partition{i}.Length
-            x_new=[x_new partition{i}.Points(:,j)];
+for i=1:partition.Length
+    if(partition.Clusters{i}.Length>0) % Removes single point clusters, good?
+        for j=1:partition.Clusters{i}.Length
+            x_new=[x_new partition.Clusters{i}.Points(:,j)];
             labels_new=[labels_new i];
         end
     else % single point cluster
-        for j=1:partition{i}.Length
-            x_new=[x_new partition{i}.Points(:,j)];
+        for j=1:partition.Clusters{i}.Length
+            x_new=[x_new partition.Clusters{i}.Points(:,j)];
             labels_new=[labels_new 0];
         end
     end
