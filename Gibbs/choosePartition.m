@@ -1,5 +1,5 @@
 function  partition  = choosePartition(W_k,partition,point)
-% INPUT: Hypotheses is all the possible partitions when the chosen
+% INPUT: Weights W_k of all hypotheses is the possible partitions when the chosen
 % measurment is placed in each of them
 % OUTPUT: Given the weights, a single partition is chosen from the Hypotheses.
 W_k_norm=W_k/sum(W_k);
