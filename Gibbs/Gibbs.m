@@ -28,7 +28,7 @@ end
 % Plot the new clusters
 figure
 plotClass(x_new,labels_new);
-title('Generated points and clusters')
+title('Initialized clustering')
 
 %profile on
 tic()
@@ -36,16 +36,16 @@ tic()
 iter = 5000;
 for asd=1:iter % number of rotation of all the points
     % Randomly choose point from cluster
-    [clusters, point, c] = pickRandomZ(clusters); % pick a point
+    [clusters, point, c] = pickRandomZ(clusters,N); % pick a point
     
     if(clusters{c}.Length==0) % delete if empty cluster
         clusters(c)=[];
     end
     
     % point cannot exist in clusters when this is called
-    W_k = evaluateWeights(clusters,point);
+    W_k = evaluateWeights(clusters,point); % Returns the weight vector for all partitions
     
-    clusters = choosePartition();
+    clusters = choosePartition(W_k,clusters); % returns the chosen partition
 end
 % Gibbs done
 toc()
@@ -71,4 +71,4 @@ end
 % Plot the new clusters
 figure
 plotClass(x_new,labels_new);
-title('Generated points and clusters')
+title('Resulting clusters')
