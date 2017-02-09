@@ -42,19 +42,12 @@ for asd=1:iter % number of rotation of all the points
         clusters(c)=[];
     end
     
-    % Måste ta bort point från clusters innan denna anropas...
+    % point cannot exist in clusters when this is called
     W_k = evaluateWeights(clusters,point);
     
-    c_weigths=c_weigths/sum(c_weigths); % normalize
-    c_rand = sum(cumsum(c_weigths)<rand())+1; % pick one cluster at random
-    if c_rand<length(c_weigths)
-        clusters{c_rand}=clusters{c_rand}.addPoint(point); % add the point to the cluster
-    else
-        clusters{c_rand}=GibbsCluster();
-        clusters{c_rand}=clusters{c_rand}.addPoint(point);
-        %disp('New cluster created');
-    end
+    clusters = choosePartition();
 end
+% Gibbs done
 toc()
 %profile viewer
 
