@@ -55,7 +55,7 @@ toc()
 
 %%%%%%%%%%%% Slow and simple %%%%%%%%%%%%%%%%
 % Plotta sista
-partition = Hypotheses{80};
+partition = Hypotheses{4000};
 % Create array of points and corresponding labels
 x_new = [];
 labels_new = [];

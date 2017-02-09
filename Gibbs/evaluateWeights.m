@@ -6,7 +6,7 @@ global v_0 S_0 alpha_0 beta_0;
 
 
 N = P_0.Length;
-W_k = zeros(N+1,1);
+W_k = ones(N+1,1);
 N_1 = N;
 N_0 = 0; % What are N1 N0 ?
 for j = 1:N
