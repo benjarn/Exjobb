@@ -21,6 +21,11 @@ classdef Partition
             obj.Clusters{obj.Length}=Cluster;
         end
         
+        function obj = removeCluster(obj,index)
+            obj.Length = max(0,obj.Length-length(index));
+            obj.Clusters(index)=[];
+        end
+        
         
     end
     
