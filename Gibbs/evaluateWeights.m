@@ -16,7 +16,7 @@ for j = 1:N
     for i = 1:P_j.Length % Add the p_D to check if the cluster is out of view
         % calculate weight parameters
         v_k = v_0 + P_j.Clusters{i}.Length-1;
-        S_k = S_0 + (P_j.Clusters{i}.Points-P_j.Clusters{i}.Mean)*(P_j.Clusters{i}.Points-P_j.Clusters{i}.Mean)';
+        S_k = S_0 + (bsxfun(@minus,P_j.Clusters{i}.Points,P_j.Clusters{i}.Mean))*(bsxfun(@minus,P_j.Clusters{i}.Points,P_j.Clusters{i}.Mean))';
         mu_k = P_j.Clusters{i}.Mean;
         c_k = P_j.Clusters{i}.Length;
         alpha_k = alpha_0 + c_k;
