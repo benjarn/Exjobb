@@ -18,19 +18,8 @@ v_0 = 2;
 alpha_0 = 0.1;
 beta_0 = 0.2;
 
-% Create clusters and add all points to them (random order)
-clusters = {};
-for i=1:ceil(83) % Create random number of clusters
-    clusters{length(clusters)+1} = GibbsCluster();
-end
-j=1;
-for i = randperm(N) % Add points to cluster in random order
-    clusters{j} = clusters{j}.addPoint(x(:,i));
-    j=j+1;
-    if j>length(clusters)
-        j=1;
-    end
-end
+% Initialize cluster partitions
+clusters = initializePartitions(x,N);
 
 %%%%%% DEBUG PLOT
 % Create array of points and corresponding labels
@@ -52,10 +41,8 @@ tic()
 % Algorithm 1
 iter = 5000;
 for asd=1:iter % number of rotation of all the points
-    % Randomly choose point from cluster (uniformly)
-    c = ceil(length(clusters)*rand());
-    p = ceil(clusters{c}.Length*rand());
-    [clusters{c}, point] = clusters{c}.removePoint(p); % pick a point
+    % Randomly choose point from cluster
+    [clusters, point, c] = pickRandomZ(clusters); % pick a point
     
     if(clusters{c}.Length==0) % delete if empty cluster
         clusters(c)=[];
