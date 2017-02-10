@@ -19,4 +19,4 @@ for i=1:N
 end
 %Plot the random numbers.
 %figure
-plotClass(r,labels);
+%plotClass(r,labels);

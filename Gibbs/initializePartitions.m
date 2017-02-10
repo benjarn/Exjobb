@@ -4,7 +4,7 @@ function [ partitions ] = initializePartitions( x,N )
 
 % Create clusters and add all points to them (random order)
 partitions = Partition();
-for i=1:ceil(83) % Create random number of clusters
+for i=1:ceil(7) % Create random number of clusters
     partitions = partitions.addCluster(GibbsCluster());
 end
 j=1;

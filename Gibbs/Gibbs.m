@@ -32,10 +32,10 @@ figure
 plotClass(x_new,labels_new);
 title('Initialized clustering')
 
-profile on
+%profile on
 tic()
 % Algorithm 1
-iter = 500;
+iter = 5000;
 for asd=1:iter % number of rotation of all the points
     % Randomly choose point from cluster
     [partition, point, c] = pickRandomZ(partition,N); % pick a point
@@ -46,13 +46,15 @@ for asd=1:iter % number of rotation of all the points
     
     % point cannot exist in clusters when this is called
     W_k = evaluateWeights(partition,point); % Returns the weight vector for all partition
-    %plot(W_k);pause(0.1)
+     if(mod(asd,100)==0)
+         plot(W_k/sum(W_k));pause(0.0001);
+     end
     Hypotheses{length(Hypotheses)+1} = choosePartition(W_k,partition,point); % returns the chosen partition
     partition = Hypotheses{length(Hypotheses)};
 end
 % Gibbs done
 toc()
-profile viewer
+%profile viewer
 
 %%%%%%%%%%%% Slow and simple %%%%%%%%%%%%%%%%
 %% Plotta sista
@@ -60,15 +62,18 @@ profile viewer
 % Create array of points and corresponding labels
 x_new = [];
 labels_new = [];
+means=[];
 for i=1:partition.Length
     if(partition.Clusters{i}.Length>0) % Removes single point clusters, good?
         for j=1:partition.Clusters{i}.Length
             x_new=[x_new partition.Clusters{i}.Points(:,j)];
+            means = [means partition.Clusters{i}.Mean];
             labels_new=[labels_new i];
         end
     else % single point cluster
         for j=1:partition.Clusters{i}.Length
             x_new=[x_new partition.Clusters{i}.Points(:,j)];
+            means = [means partition.Clusters{i}.Mean];
             labels_new=[labels_new 0];
         end
     end
@@ -76,6 +81,8 @@ end
 % Plot the new clusters
 figure
 plotClass(x_new,labels_new);
+hold on;
+plot(means(1,:),means(2,:),'x');
 title('Resulting clusters')
 
 a=zeros(1,length(Hypotheses));
