@@ -49,6 +49,7 @@ for asd=1:iter % number of rotation of all the points
     %plot(W_k);pause(0.1)
     Hypotheses{length(Hypotheses)+1} = choosePartition(W_k,partition,point); % returns the chosen partition
     partition = Hypotheses{length(Hypotheses)};
+    sprintf('iter=%i,cluster=%i',asd,partition.Length)
 end
 % Gibbs done
 toc()
