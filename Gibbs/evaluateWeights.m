@@ -9,8 +9,11 @@ N = P_0.Length;
 W_k = ones(N+1,1);
 N_1 = N;
 N_0 = 0; % What are N1 N0 ?
-for j = 1:N
+for j = 1:N+1
     P_j = P_0; % copy the partition
+    if(j==N+1)
+    P_j = P_j.addCluster(GibbsCluster());
+    end
     P_j.Clusters{j} = P_j.Clusters{j}.addPoint(point);
 
     p_D = fov();
@@ -21,8 +24,8 @@ for j = 1:N
             S_k = S_0 + (bsxfun(@minus,P_j.Clusters{i}.Points,P_j.Clusters{i}.Mean))*(bsxfun(@minus,P_j.Clusters{i}.Points,P_j.Clusters{i}.Mean))';
             mu_k = P_j.Clusters{i}.Mean;
             c_k = P_j.Clusters{i}.Length;
-            alpha_k = alpha_0 + c_k;
-            beta_k = beta_0 + N_1 + N_0;
+            alpha_k = alpha_0 + c_k; % Small alpha, fewer measurements expected from landmark
+            beta_k = beta_0 + N_1 + N_0; % Small beta, large variance
 
             % calculate the prodsum
             p_D = 1;
@@ -31,11 +34,10 @@ for j = 1:N
             % log(a/b) = log(a) - log(b)
             % log(b^a) = a*log(b)
             % gammaln(A) = log(gamma(A))
-            W_k(j) = W_k(j) * p_D * (beta_0^alpha_0*gamma(alpha_k))/(beta_k^alpha_k*gamma(alpha_0)) * (norm(S_0)^(v_0/2)*gamma2(v_k/2))/(pi^(c_k-1)*sqrt(c_k)*gamma2(v_0/2)*norm(S_k)^v_k/2);
+            W_k(j) = W_k(j)  * (beta_0^alpha_0*gamma(alpha_k))/(beta_k^alpha_k*gamma(alpha_0)) * (norm(S_0)^(v_0/2)*gamma2(v_k/2))/(pi^(c_k-1)*sqrt(c_k)*gamma2(v_0/2)*norm(S_k)^v_k/2);
         end
     else
         W_k(j) = 0;
     end
 end
-W_k(end) = 0; % weight of last element?
 

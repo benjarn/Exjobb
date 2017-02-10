@@ -32,10 +32,10 @@ figure
 plotClass(x_new,labels_new);
 title('Initialized clustering')
 
-%profile on
+profile on
 tic()
 % Algorithm 1
-iter = 9000;
+iter = 500;
 for asd=1:iter % number of rotation of all the points
     % Randomly choose point from cluster
     [partition, point, c] = pickRandomZ(partition,N); % pick a point
@@ -46,13 +46,13 @@ for asd=1:iter % number of rotation of all the points
     
     % point cannot exist in clusters when this is called
     W_k = evaluateWeights(partition,point); % Returns the weight vector for all partition
-   % plot(W_k);pause(0.1)
+    %plot(W_k);pause(0.1)
     Hypotheses{length(Hypotheses)+1} = choosePartition(W_k,partition,point); % returns the chosen partition
     partition = Hypotheses{length(Hypotheses)};
 end
 % Gibbs done
 toc()
-%profile viewer
+profile viewer
 
 %%%%%%%%%%%% Slow and simple %%%%%%%%%%%%%%%%
 %% Plotta sista
@@ -77,3 +77,9 @@ end
 figure
 plotClass(x_new,labels_new);
 title('Resulting clusters')
+
+a=zeros(1,length(Hypotheses));
+for i=1:length(Hypotheses); a(i)=Hypotheses{i}.Length; end
+figure
+plot(a)
+title('#Clusters over time')
