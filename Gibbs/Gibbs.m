@@ -32,10 +32,10 @@ figure
 plotClass(x_new,labels_new);
 title('Initialized clustering')
 
-profile on
+%profile on
 tic()
 % Algorithm 1
-iter = 500;
+iter = 1000;
 for asd=1:iter % number of rotation of all the points
     % Randomly choose point from cluster
     [partition, point, c] = pickRandomZ(partition,N); % pick a point
