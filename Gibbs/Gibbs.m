@@ -24,8 +24,9 @@ profile on
 tic()
 % Algorithm 1
 for k=1:length(x)
+    partition=Partition();
     partition = initializePartitions(x{k},length(x{k}),partition);
-    Hypotheses{length(Hypotheses)+1} = partition;
+    
     N=length(x{k});
     iter = 500;
     for asd=1:iter % number of rotation of all the points
@@ -39,13 +40,13 @@ for k=1:length(x)
         % point cannot exist in clusters when this is called
         W_k = evaluateWeights(partition,point,ego_pos(:,k)); % Returns the weight vector for all partition
         %plot(W_k);pause(0.1)
-        Hypotheses{length(Hypotheses)+1} = choosePartition(W_k,partition,point); % returns the chosen partition
-        partition = Hypotheses{length(Hypotheses)};
+        partition = choosePartition(W_k,partition,point); % returns the chosen partition
         if(mod(asd,100)==0)
             sprintf('iter=%i,cluster=%i,measurement=%i',asd,partition.Length,k)
         end
     end
     % Gibbs done
+    Hypotheses{length(Hypotheses)+1} = partition;
 end
 toc()
 profile viewer
