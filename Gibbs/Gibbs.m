@@ -46,11 +46,14 @@ for asd=1:iter % number of rotation of all the points
     
     % point cannot exist in clusters when this is called
     W_k = evaluateWeights(partition,point); % Returns the weight vector for all partition
-     if(mod(asd,100)==0)
-         plot(W_k/sum(W_k));pause(0.0001);
-     end
+
     Hypotheses{length(Hypotheses)+1} = choosePartition(W_k,partition,point); % returns the chosen partition
     partition = Hypotheses{length(Hypotheses)};
+    sprintf('iter=%i, clusters=%i',asd,partition.Length)
+    if(mod(asd,20)==0)
+         %plot(W_k/sum(W_k));pause(0.0001);
+         fulplott(partition); pause(0.001);
+    end
 end
 % Gibbs done
 toc()
@@ -79,7 +82,7 @@ for i=1:partition.Length
     end
 end
 % Plot the new clusters
-figure
+figure(4)
 plotClass(x_new,labels_new);
 hold on;
 plot(means(1,:),means(2,:),'x');
@@ -87,6 +90,6 @@ title('Resulting clusters')
 
 a=zeros(1,length(Hypotheses));
 for i=1:length(Hypotheses); a(i)=Hypotheses{i}.Length; end
-figure
+figure(5)
 plot(a)
 title('#Clusters over time')
