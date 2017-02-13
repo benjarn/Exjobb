@@ -7,3 +7,7 @@ v_0 = 20;
 alpha_0 = 1;
 beta_0 = 1;
 
+% Car parameters
+global sensor_width sensor_distance;
+sensor_width = 15;
+sensor_distance = 50;

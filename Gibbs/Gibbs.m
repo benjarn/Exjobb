@@ -53,7 +53,7 @@ for asd=1:iter % number of rotation of all the points
 end
 % Gibbs done
 toc()
-profile viewer
+%profile viewer
 
 %%%%%%%%%%%% Slow and simple %%%%%%%%%%%%%%%%
 %% Plotta sista

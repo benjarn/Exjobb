@@ -16,7 +16,7 @@ for j = 1:N+1
     end
     P_j.Clusters{j} = P_j.Clusters{j}.addPoint(point);
 
-    p_D = fov();
+    p_D = fov(P_j.Clusters{j}); % Should be before assignment pj - p0
     if(p_D) % Check if target landmark is inside the fov
         for i = 1:P_j.Length % Add the p_D to check if the cluster is out of view
             % calculate weight parameters
