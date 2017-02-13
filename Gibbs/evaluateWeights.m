@@ -1,4 +1,4 @@
-function [ W_k ] = evaluateWeights( P_0, point )
+function [ W_k ] = evaluateWeights( P_0, point, ego_pos )
 %EVALUATE Evaluates the weigh W_k_j for each possible partitioning of the selected point
 % Moves z to each possible cluster and evaluates the weight of the partition resulting from that move
 % P_0 is the partitioning from the start, with point removed from the cluster
@@ -16,7 +16,7 @@ for j = 1:N+1
     end
     P_j.Clusters{j} = P_j.Clusters{j}.addPoint(point);
 
-    p_D = fov(P_j.Clusters{j}); % Should be before assignment pj - p0
+    p_D = fov(P_j.Clusters{j}.Mean, ego_pos); % Should be before assignment pj - p0
     if(p_D) % Check if target landmark is inside the fov
         for i = 1:P_j.Length % Add the p_D to check if the cluster is out of view
             % calculate weight parameters
