@@ -28,12 +28,6 @@ for j = 1:N+1
             beta_k = beta_0 + N_1 + N_0; % Small beta, large variance
 
             % calculate the prodsum
-            p_D = 1;
-            % Add a logarithm based calculation
-            % log(a*b) = log(a) + log(b)
-            % log(a/b) = log(a) - log(b)
-            % log(b^a) = a*log(b)
-            % gammaln(A) = log(gamma(A))
             W_k(j) = W_k(j)  * (beta_0^alpha_0*gamma(alpha_k))/(beta_k^alpha_k*gamma(alpha_0)) * (norm(S_0)^(v_0/2)*gamma2(v_k/2))/(pi^(c_k-1)*sqrt(c_k)*gamma2(v_0/2)*norm(S_k)^(v_k/2));
         end
     else
