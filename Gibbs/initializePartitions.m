@@ -1,13 +1,13 @@
-function [ partitions ] = initializePartitions( x,N )
+function [ partitions ] = initializePartitions( x,N,partitions )
 %INITIALIZEPARTITIONS Summary of this function goes here
 %   Detailed explanation goes here
 
 % Create clusters and add all points to them (random order)
-partitions = Partition();
+L = partitions.Length; % Length before run
 for i=1:ceil(N) % Create random number of clusters
     partitions = partitions.addCluster(GibbsCluster());
 end
-j=1;
+j=L+1;
 for i = randperm(N) % Add points to cluster in random order
     partitions.Clusters{j} = partitions.Clusters{j}.addPoint(x(:,i));
     j=j+1;
