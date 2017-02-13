@@ -2,9 +2,11 @@ clear;
 close all;
 clc
 %% gen points
-[x,labels]=generate_sample_cluster();
+[x,labels]=generate_sample_cluster(2);
 figure
-plotClass(x,labels);
+if ~isempty(labels)
+    plotClass(x,labels);
+end
 title('Generated points and clusters')
 %%
 % Sample the distribution
@@ -59,9 +61,11 @@ profile viewer
 %% Plotta sista
 %partition = Hypotheses{5000};
 % Create array of points and corresponding labels
+x_mean = [];
 x_new = [];
 labels_new = [];
 for i=1:partition.Length
+    x_mean=[x_mean partition.Clusters{i}.Mean];
     if(partition.Clusters{i}.Length>0) % Removes single point clusters, good?
         for j=1:partition.Clusters{i}.Length
             x_new=[x_new partition.Clusters{i}.Points(:,j)];
@@ -77,6 +81,8 @@ end
 % Plot the new clusters
 figure
 plotClass(x_new,labels_new);
+hold on
+plot(x_mean(1,:),x_mean(2,:),'x');
 title('Resulting clusters')
 
 a=zeros(1,length(Hypotheses));
