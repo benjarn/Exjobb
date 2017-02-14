@@ -16,10 +16,12 @@ end
 % Assume gaussian
 %randperm // gives random permutation of array, good for selection in
 %random order
+Measurements=0;
 parameters
 Hypotheses = {};
 for k=1:length(x)
     N=length(x{k});
+    Measurements = Measurements + N;
     % Initialize cluster partition
     partition = initializePartitions(x{k},N);
     
@@ -42,7 +44,7 @@ for k=1:length(x)
     %profile on
     tic()
     % Algorithm 1
-    iter = 20*N;
+    iter = 10*N;
     for asd=1:iter % number of rotation of all the points
         % Randomly choose point from cluster
         [partition, point, c] = pickRandomZ(partition,N); % pick a point
@@ -101,10 +103,11 @@ end
 %%
 profile on
 % Final gibbs sampling of points
-iter = 60;
-for asd=1:iter % number of rotation of all the points
+iter = 1000;
+A=randperm(Measurements);
+for asd=1:length(A) % number of rotation of all the points
     % Randomly choose point from cluster
-    [partition, point, c] = pickRandomZ(partition,N); % pick a point
+    [partition, point, c] = pickRandomZ(partition,Measurements,A(asd)); % pick a point
     
     if(partition.Clusters{c}.Length==0) % delete if empty cluster
         partition = partition.removeCluster(c);
@@ -112,10 +115,11 @@ for asd=1:iter % number of rotation of all the points
     
     % point cannot exist in clusters when this is called
     W_k = evaluateWeights(partition,point,ego_pos{point(3)}); % Returns the weight vector for all partition
-    %plot(W_k);pause(0.1)
+ 
     partition = choosePartition(W_k,partition,point); % returns the chosen partition
-    if(mod(asd,200)==0)
+    if(mod(asd,100)==0)
         sprintf('iter=%i,clusters=%i',asd,partition.Length)
+        plot(W_k/sum(W_k));pause(0.1)
     end
 end
 profile off
@@ -131,16 +135,16 @@ x_var={};
 for i=1:partition.Length
     x_mean=[x_mean partition.Clusters{i}.Mean];
     x_var{i} = iwishrnd(S_0+partition.Clusters{i}.Sigma,v_0+partition.Clusters{i}.Length-1);
-    if(partition.Clusters{i}.Length>0) % Removes single point clusters, good?
+    if(partition.Clusters{i}.Length>1) % Removes single point clusters, good?
         for j=1:partition.Clusters{i}.Length
             x_new=[x_new partition.Clusters{i}.Points(1:2,j)];
             labels_new=[labels_new i];
         end
     else % single point cluster
-        for j=1:partition.Clusters{i}.Length
-            x_new=[x_new partition.Clusters{i}.Points(1:2,j)];
-            labels_new=[labels_new 0];
-        end
+%         for j=1:partition.Clusters{i}.Length
+%             x_new=[x_new partition.Clusters{i}.Points(1:2,j)];
+%             labels_new=[labels_new 0];
+%         end
     end
 end
 % Plot the new clusters

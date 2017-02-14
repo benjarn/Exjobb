@@ -22,13 +22,14 @@ switch c
     case 2
         load('noisy_scans')
         r={};
-        N=400;
-        for i=1:N
+        N1=150;
+        N=300; % 400 is ~max
+        for i=N1:N
            z=[scan_noisy(i).zc];
-           z(3,:) = i; % Add time tag
-           r{i} = [z];
+           z(3,:) = i-N1+1; % Add time tag
+           r{i-N1+1} = [z];
         end
-        ego_pos={scan_noisy(1:N).x_true_EGO};
+        ego_pos={scan_noisy(N1:N).x_true_EGO};
         labels=[];
     otherwise
         error('Choose case 1 or 2')

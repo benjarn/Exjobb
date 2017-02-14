@@ -1,8 +1,12 @@
-function [ partition, point, c, p ] = pickRandomZ( partition, N )
+function [ partition, point, c, p ] = pickRandomZ( partition, N, p )
 %PICKRANDOMZ picks a random point and removes it from clusters
 % N = length of measurements
 % does a linear search for the selected element.
-x = randi(N); % Pick random point out of all x;
+if nargin>2
+    x = p;
+else
+    x = randi(N); % Pick random point out of all x;
+end
 c = 1;
 p = 1;
 set = 0;
