@@ -7,6 +7,7 @@ clc
 if ~isempty(labels)
     figure
     plotClass(x,labels);
+    
     title('Generated points and clusters')
 end
 
@@ -41,7 +42,7 @@ for k=1:length(x)
     %profile on
     tic()
     % Algorithm 1
-    iter = 10*N;
+    iter = 20*N;
     for asd=1:iter % number of rotation of all the points
         % Randomly choose point from cluster
         [partition, point, c] = pickRandomZ(partition,N); % pick a point
@@ -97,8 +98,10 @@ for i=1:length(Clusters)
     partition = partition.addCluster(Clusters{i});
 end
 
+%%
+profile on
 % Final gibbs sampling of points
-iter = 1000;
+iter = 60;
 for asd=1:iter % number of rotation of all the points
     % Randomly choose point from cluster
     [partition, point, c] = pickRandomZ(partition,N); % pick a point
@@ -111,11 +114,12 @@ for asd=1:iter % number of rotation of all the points
     W_k = evaluateWeights(partition,point,ego_pos{point(3)}); % Returns the weight vector for all partition
     %plot(W_k);pause(0.1)
     partition = choosePartition(W_k,partition,point); % returns the chosen partition
-    if(mod(asd,500)==0)
+    if(mod(asd,200)==0)
         sprintf('iter=%i,clusters=%i',asd,partition.Length)
     end
 end
-
+profile off
+profile viewer
 %%%%%%%%%%%% Slow and simple %%%%%%%%%%%%%%%%
 %% Plotta sista
 %partition = Hypotheses{5000};

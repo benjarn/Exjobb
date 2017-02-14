@@ -22,7 +22,7 @@ switch c
     case 2
         load('noisy_scans')
         r={};
-        N=10;
+        N=400;
         for i=1:N
            z=[scan_noisy(i).zc];
            z(3,:) = i; % Add time tag
