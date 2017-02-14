@@ -19,7 +19,7 @@ for i = 1:N % Add the p_D to check if the cluster is out of view
     alpha_k = alpha_0 + c_k; % Small alpha, fewer measurements expected from landmark
     beta_k = beta_0 + N_1 + N_0; % Small beta, large variance
     % calculate the prodsum
-    W_base = prodSum(W_base,v_k,S_k,mu_k,c_k,alpha_k,beta_k);  
+    W_base = prodSum_mex(W_base,v_k,S_k,mu_k,c_k,alpha_k,beta_k);  
 end
 W_k = W_base*W_k;
 for j = 1:N+1
