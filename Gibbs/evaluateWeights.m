@@ -21,19 +21,13 @@ for j = 1:N+1
         for i = 1:P_j.Length % Add the p_D to check if the cluster is out of view
             % calculate weight parameters
             v_k = v_0 + P_j.Clusters{i}.Length-1;
-            S_k = S_0 + (bsxfun(@minus,P_j.Clusters{i}.Points,P_j.Clusters{i}.Mean))*(bsxfun(@minus,P_j.Clusters{i}.Points,P_j.Clusters{i}.Mean))';
+            S_k = S_0 + P_j.Clusters{i}.Sigma;
             mu_k = P_j.Clusters{i}.Mean;
             c_k = P_j.Clusters{i}.Length;
             alpha_k = alpha_0 + c_k; % Small alpha, fewer measurements expected from landmark
             beta_k = beta_0 + N_1 + N_0; % Small beta, large variance
 
             % calculate the prodsum
-            p_D = 1;
-            % Add a logarithm based calculation
-            % log(a*b) = log(a) + log(b)
-            % log(a/b) = log(a) - log(b)
-            % log(b^a) = a*log(b)
-            % gammaln(A) = log(gamma(A))
             W_k(j) = W_k(j)  * (beta_0^alpha_0*gamma(alpha_k))/(beta_k^alpha_k*gamma(alpha_0)) * (norm(S_0)^(v_0/2)*gamma2(v_k/2))/(pi^(c_k-1)*sqrt(c_k)*gamma2(v_0/2)*norm(S_k)^(v_k/2));
         end
     else

@@ -38,7 +38,7 @@ classdef GibbsCluster
             if obj.Length==1
                 s = eye(2);
             else
-                s = cov(obj.Points');
+                s = (obj.Points - obj.Mean)*(obj.Points - obj.Mean)';
             end
         end
     end
