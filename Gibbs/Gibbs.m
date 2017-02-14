@@ -24,10 +24,11 @@ profile on
 tic()
 % Algorithm 1
 for k=1:length(x)
+    %partition=Partition(); % Empty partition
     partition = initializePartitions(x{k},length(x{k}),partition);
-    Hypotheses{length(Hypotheses)+1} = partition;
+    
     N=length(x{k});
-    iter = 500;
+    iter = 1000;
     for asd=1:iter % number of rotation of all the points
         % Randomly choose point from cluster
         [partition, point, c] = pickRandomZ(partition,N); % pick a point
@@ -39,13 +40,13 @@ for k=1:length(x)
         % point cannot exist in clusters when this is called
         W_k = evaluateWeights(partition,point,ego_pos(:,k)); % Returns the weight vector for all partition
         %plot(W_k);pause(0.1)
-        Hypotheses{length(Hypotheses)+1} = choosePartition(W_k,partition,point); % returns the chosen partition
-        partition = Hypotheses{length(Hypotheses)};
+        partition = choosePartition(W_k,partition,point); % returns the chosen partition
         if(mod(asd,100)==0)
             sprintf('iter=%i,cluster=%i,measurement=%i',asd,partition.Length,k)
         end
     end
     % Gibbs done
+    Hypotheses{length(Hypotheses)+1} = partition;
 end
 toc()
 profile viewer
@@ -57,8 +58,10 @@ profile viewer
 x_mean = [];
 x_new = [];
 labels_new = [];
+x_var={};
 for i=1:partition.Length
     x_mean=[x_mean partition.Clusters{i}.Mean];
+    x_var{i} = iwishrnd(S_0+(bsxfun(@minus,partition.Clusters{i}.Points,partition.Clusters{i}.Mean))*(bsxfun(@minus,partition.Clusters{i}.Points,partition.Clusters{i}.Mean))',v_0+partition.Clusters{i}.Length-1);
     if(partition.Clusters{i}.Length>0) % Removes single point clusters, good?
         for j=1:partition.Clusters{i}.Length
             x_new=[x_new partition.Clusters{i}.Points(:,j)];
@@ -76,6 +79,9 @@ figure
 plotClass(x_new,labels_new);
 hold on
 plot(x_mean(1,:),x_mean(2,:),'x');
+for i=1:length(x_var)
+    sigmaplots(x_mean(:,i),x_var{i})
+end
 title('Resulting clusters')
 
 a=zeros(1,length(Hypotheses));
