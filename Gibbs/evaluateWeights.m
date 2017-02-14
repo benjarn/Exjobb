@@ -19,7 +19,7 @@ for i = 1:N % Add the p_D to check if the cluster is out of view
     alpha_k = alpha_0 + c_k; % Small alpha, fewer measurements expected from landmark
     beta_k = beta_0 + N_1 + N_0; % Small beta, large variance
     % calculate the prodsum
-    W_base = prodSum_mex(W_base,v_k,S_k,mu_k,c_k,alpha_k,beta_k);  
+    W_base = prodSum(W_base,v_k,S_k,mu_k,c_k,alpha_k,beta_k);  
 end
 W_k = W_base*W_k;
 for j = 1:N+1
@@ -37,7 +37,7 @@ for j = 1:N+1
         alpha_k = alpha_0 + c_k; % Small alpha, fewer measurements expected from landmark
         beta_k = beta_0 + N_1 + N_0; % Small beta, large variance
         % calculate the prodsum
-        W_old = prodSum_mex(1,v_k,S_k,mu_k,c_k,alpha_k,beta_k);
+        W_old = prodSum(1,v_k,S_k,mu_k,c_k,alpha_k,beta_k);
 
         P_j.Clusters{j} = P_j.Clusters{j}.addPoint(point);
         % calculate weight parameters for the target cluster
@@ -48,7 +48,7 @@ for j = 1:N+1
         alpha_k = alpha_0 + c_k; % Small alpha, fewer measurements expected from landmark
         beta_k = beta_0 + N_1 + N_0; % Small beta, large variance
         % calculate the prodsum
-        W_k(j) = prodSum_mex(W_k(j),v_k,S_k,mu_k,c_k,alpha_k,beta_k)/W_old;
+        W_k(j) = prodSum(W_k(j),v_k,S_k,mu_k,c_k,alpha_k,beta_k)/W_old;
     else
         W_k(j) = 0;
     end
