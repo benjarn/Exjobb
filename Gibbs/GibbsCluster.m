@@ -31,14 +31,14 @@ classdef GibbsCluster
         end
         
         function m = updateMean(obj)
-            m = mean(obj.Points,2);
+            m = mean(obj.Points(1:2,:),2);
         end
         
         function s = updateSigma(obj)
             if obj.Length==1
                 s = eye(2);
             else
-                s = (obj.Points-obj.Mean)*(obj.Points-obj.Mean)';
+                s = (obj.Points(1:2,:)-obj.Mean)*(obj.Points(1:2,:)-obj.Mean)';
             end
         end
     end
