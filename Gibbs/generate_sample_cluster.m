@@ -1,4 +1,4 @@
-function [r,labels]=generate_sample_cluster(c)
+function [r,labels,ego_pos]=generate_sample_cluster(c)
 %% Generates clusters to be tested with gibbs
 % Produces x,y samples without labels
 
@@ -21,9 +21,14 @@ switch c
 
     case 2
         load('noisy_scans')
-        r=[scan_noisy.zc];
-        r(:,50:end)=[]; % Keep only the first data points 
-        r(3,:)=[]; % Remove 3d dimension
+        r=[];
+        N=3;
+        for i=1:N
+           z=[scan_noisy(i).zc];
+           z(3,:) = i; % Add time tag
+           r = [r z];
+        end
+        ego_pos={scan_noisy(1:N).x_true_EGO};
         labels=[];
     otherwise
         error('Choose case 1 or 2')

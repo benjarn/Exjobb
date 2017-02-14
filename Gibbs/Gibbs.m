@@ -2,12 +2,14 @@ clear;
 close all;
 clc
 %% gen points
-[x,labels]=generate_sample_cluster(2);
-figure
+[x,labels,ego_pos]=generate_sample_cluster(2);
+
 if ~isempty(labels)
+    figure
     plotClass(x,labels);
+    title('Generated points and clusters')
 end
-title('Generated points and clusters')
+
 %%
 % Sample the distribution
 % Assume gaussian
@@ -25,7 +27,7 @@ x_new = [];
 labels_new = [];
 for i=1:partition.Length
     for j=1:partition.Clusters{i}.Length
-        x_new=[x_new partition.Clusters{i}.Points(:,j)];
+        x_new=[x_new partition.Clusters{i}.Points(1:2,j)];
         labels_new=[labels_new i];
     end
 end
@@ -37,7 +39,7 @@ title('Initialized clustering')
 %profile on
 tic()
 % Algorithm 1
-iter = 1000;
+iter = 101;
 for asd=1:iter % number of rotation of all the points
     % Randomly choose point from cluster
     [partition, point, c] = pickRandomZ(partition,N); % pick a point
@@ -47,11 +49,11 @@ for asd=1:iter % number of rotation of all the points
     end
     
     % point cannot exist in clusters when this is called
-    W_k = evaluateWeights(partition,point); % Returns the weight vector for all partition
+    W_k = evaluateWeights(partition,point,ego_pos{point(3)}); % Returns the weight vector for all partition
     %plot(W_k);pause(0.1)
     Hypotheses{length(Hypotheses)+1} = choosePartition(W_k,partition,point); % returns the chosen partition
     partition = Hypotheses{length(Hypotheses)};
-    if(mod(asd,100)==0)
+    if(mod(asd,100)==0 || asd==1)
         sprintf('iter=%i,cluster=%i',asd,partition.Length)
     end
 end
@@ -69,15 +71,15 @@ labels_new = [];
 x_var={};
 for i=1:partition.Length
     x_mean=[x_mean partition.Clusters{i}.Mean];
-    x_var{i} = iwishrnd(S_0+(bsxfun(@minus,partition.Clusters{i}.Points,partition.Clusters{i}.Mean))*(bsxfun(@minus,partition.Clusters{i}.Points,partition.Clusters{i}.Mean))',v_0+partition.Clusters{i}.Length-1);
+    x_var{i} = iwishrnd(S_0+partition.Clusters{i}.Sigma,v_0+partition.Clusters{i}.Length-1);
     if(partition.Clusters{i}.Length>0) % Removes single point clusters, good?
         for j=1:partition.Clusters{i}.Length
-            x_new=[x_new partition.Clusters{i}.Points(:,j)];
+            x_new=[x_new partition.Clusters{i}.Points(1:2,j)];
             labels_new=[labels_new i];
         end
     else % single point cluster
         for j=1:partition.Clusters{i}.Length
-            x_new=[x_new partition.Clusters{i}.Points(:,j)];
+            x_new=[x_new partition.Clusters{i}.Points(1:2,j)];
             labels_new=[labels_new 0];
         end
     end
