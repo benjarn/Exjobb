@@ -22,10 +22,9 @@ switch c
 
     case 2
         load('noisy_scans')
-        r={scan_noisy(1:3).zc};
+        r={scan_noisy(1:20).zc};
         for i=1:length(r)
-            z=r{i};
-            r{i}=z(1:2,:); % Fulkod
+            r{i}(3,:) = 1:length(r{i});
         end
         ego_pos = [scan_noisy(1:50).x_true_EGO];
         labels=[];
