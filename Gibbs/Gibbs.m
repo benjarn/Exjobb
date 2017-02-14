@@ -86,15 +86,34 @@ end
 % Delete empty clusters
 i=1;
 while i<length(Clusters)
-   if(Clusters{i}.Length==0)
-       Clusters(i)=[];
-   else
-       i=i+1;
-   end
+    if(Clusters{i}.Length==0)
+        Clusters(i)=[];
+    else
+        i=i+1;
+    end
 end
 partition=Partition();
 for i=1:length(Clusters)
     partition = partition.addCluster(Clusters{i});
+end
+
+% Final gibbs sampling of points
+iter = 1000;
+for asd=1:iter % number of rotation of all the points
+    % Randomly choose point from cluster
+    [partition, point, c] = pickRandomZ(partition,N); % pick a point
+    
+    if(partition.Clusters{c}.Length==0) % delete if empty cluster
+        partition = partition.removeCluster(c);
+    end
+    
+    % point cannot exist in clusters when this is called
+    W_k = evaluateWeights(partition,point,ego_pos{point(3)}); % Returns the weight vector for all partition
+    %plot(W_k);pause(0.1)
+    partition = choosePartition(W_k,partition,point); % returns the chosen partition
+    if(mod(asd,500)==0)
+        sprintf('iter=%i,clusters=%i',asd,partition.Length)
+    end
 end
 
 %%%%%%%%%%%% Slow and simple %%%%%%%%%%%%%%%%
@@ -129,9 +148,9 @@ for i=1:length(x_var)
     sigmaplots(x_mean(:,i),x_var{i})
 end
 title('Resulting clusters')
-
-a=zeros(1,length(Hypotheses));
-for i=1:length(Hypotheses); a(i)=Hypotheses{i}.Length; end
-figure
-plot(a)
-title('#Clusters over time')
+% 
+% a=zeros(1,length(Hypotheses));
+% for i=1:length(Hypotheses); a(i)=Hypotheses{i}.Length; end
+% figure
+% plot(a)
+% title('#Clusters over time')
