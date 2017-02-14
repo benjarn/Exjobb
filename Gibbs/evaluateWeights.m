@@ -9,6 +9,7 @@ N = P_0.Length;
 W_k = ones(N+1,1);
 N_1 = N;
 N_0 = 0; % What are N1 N0 ?
+
 for j = 1:N+1
     P_j = P_0; % copy the partition
     if(j==N+1)

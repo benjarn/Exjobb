@@ -21,12 +21,12 @@ switch c
 
     case 2
         load('noisy_scans')
-        r=[];
-        N=3;
+        r={};
+        N=10;
         for i=1:N
            z=[scan_noisy(i).zc];
            z(3,:) = i; % Add time tag
-           r = [r z];
+           r{i} = [z];
         end
         ego_pos={scan_noisy(1:N).x_true_EGO};
         labels=[];
