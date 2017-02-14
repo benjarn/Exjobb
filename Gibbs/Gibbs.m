@@ -24,11 +24,11 @@ profile on
 tic()
 % Algorithm 1
 for k=1:length(x)
-    partition=Partition();
+    %partition=Partition(); % Empty partition
     partition = initializePartitions(x{k},length(x{k}),partition);
     
     N=length(x{k});
-    iter = 500;
+    iter = 1000;
     for asd=1:iter % number of rotation of all the points
         % Randomly choose point from cluster
         [partition, point, c] = pickRandomZ(partition,N); % pick a point
