@@ -8,6 +8,5 @@ if(j==length(W_k))
     partition = partition.addCluster(GibbsCluster());
 end
 partition.Clusters{j}=partition.Clusters{j}.addPoint(point);
-
 end
 

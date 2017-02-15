@@ -18,8 +18,8 @@ classdef GibbsCluster
         function obj = addPoint(obj,point)
             obj.Points = [obj.Points point];
             obj.Length = obj.Length+1;
+            obj.Sigma = updateSigma(obj,point);
             obj.Mean = updateMean(obj);
-            obj.Sigma = updateSigma(obj);
         end
         
         function [obj,p] = removePoint(obj,point)
@@ -27,18 +27,20 @@ classdef GibbsCluster
             obj.Points(:,point)=[];
             obj.Length = max(0,obj.Length-1);
             obj.Mean = updateMean(obj);
-            obj.Sigma = updateSigma(obj);
+            obj.Sigma = updateSigma(obj,0);
         end
         
         function m = updateMean(obj)
             m = mean(obj.Points(1:2,:),2);
         end
         
-        function s = updateSigma(obj)
+        function s = updateSigma(obj,point)
             if obj.Length==1
                 s = eye(2);
-            else
+            elseif point==0
                 s = (obj.Points(1:2,:) - obj.Mean)*(obj.Points(1:2,:) - obj.Mean)';
+            else
+                s = obj.Sigma + (obj.Length/(obj.Length+1))*(obj.Mean-point(1:2))*(obj.Mean-point(1:2))';
             end
         end
     end
