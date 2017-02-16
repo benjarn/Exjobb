@@ -36,7 +36,7 @@ classdef GibbsCluster
         
         function s = updateSigma(obj,point)
             if obj.Length==1
-                s = eye(2);
+                s = eye(2)*0;
             elseif point==0
                 s = (obj.Points(1:2,:) - obj.Mean)*(obj.Points(1:2,:) - obj.Mean)';
             else

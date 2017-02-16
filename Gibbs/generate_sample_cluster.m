@@ -23,7 +23,7 @@ switch c
         load('noisy_scans')
         r={};
         N1=1;
-        N=50; % 400 is ~max
+        N=400; % 400 is ~max
         for i=N1:N
            z=[scan_noisy(i).zc];
            z(3,:) = i-N1+1; % Add time tag
