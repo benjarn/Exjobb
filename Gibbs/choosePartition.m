@@ -4,6 +4,7 @@ function  partition  = choosePartition(W_k,partition,point)
 % OUTPUT: Given the weights, a single partition is chosen from the Hypotheses.
 W_k_norm=W_k/sum(W_k);
 j = sum(cumsum(W_k_norm)<rand())+1; % pick one cluster at random
+%[~,j]=max(W_k);
 if(j==length(W_k))
     partition = partition.addCluster(GibbsCluster());
 end
