@@ -1,3 +1,4 @@
+function out = main()
 clear;
 close all;
 clc
@@ -19,8 +20,11 @@ end
 %random order
 Measurements=0;
 parameters
+global alpha_0 beta_0;
+alpha_0 = 1;
+beta_0 = 1;
 Hypotheses = {};
-for k=1:length(x)
+for k=1:12%length(x)
     N=length(x{k});
     Measurements = Measurements + N;
     % Initialize cluster partition
@@ -45,7 +49,7 @@ for k=1:length(x)
     %profile on
     tic()
     % Algorithm 1
-    iter = 1*N;
+    iter = 1;%0*N;
     for asd=1:iter % number of rotation of all the points
         % Randomly choose point from cluster
         [partition, point, c] = pickRandomZ(partition,N); % pick a point
@@ -97,42 +101,50 @@ while i<length(Clusters)
     else
         i=i+1;
     end
- end
+end
 %%
 partition=Partition();
 for i=1:length(Clusters)
     partition = partition.addCluster(Clusters{i});
 end
 
-% %%
+%%
 % %profile on
 % % % Final gibbs sampling of points
-% for i = 1:100
-%     A=randperm(partition.Length);
-%     length(A)
-%     for asd=1:length(A) % number of rotation of all the points
-%         % Randomly choose point from cluster
-%         [partition, point, c] = pickRandomZ(partition,Measurements,A(asd)); % pick a point
-%         
-%         if(partition.Clusters{c}.Length==0) % delete if empty cluster
-%             partition = partition.removeCluster(c);
-%             A(A>A(asd))=A(A>A(asd))-1;
-%         end
-%         
-%         % point cannot exist in clusters when this is called
-%         W_k = evaluateWeights(partition,point,ego_pos{point(3)}); % Returns the weight vector for all partition
-%         
-%         partition = choosePartition(W_k,partition,point); % returns the chosen partition
-%         if(mod(asd,1)==0)
-%             sprintf('iter=%i,clusters=%i',asd,partition.Length)
-%             plot(W_k/sum(W_k));drawnow
-%         end
-%     end
-% end
+parameters
+for i = 1:1000
+    A=randperm(partition.Length);
+    length(A)
+    for asd=1:length(A) % number of rotation of all the points
+        % Randomly choose point from cluster
+        [partition, point, c] = pickRandomZ(partition,Measurements,A(asd)); % pick a point
+        
+        if(partition.Clusters{c}.Length==0) % delete if empty cluster
+            partition = partition.removeCluster(c);
+            A(A>A(asd))=A(A>A(asd))-1;
+        end
+        
+        % point cannot exist in clusters when this is called
+        W_k = evaluateWeights(partition,point,ego_pos{point(3)}); % Returns the weight vector for all partition
+        if(any(isnan(W_k))|| all(W_k==0))
+            pause(0.1);
+        end
+        partition = choosePartition(W_k,partition,point); % returns the chosen partition
+        if(mod(asd,10)==0)
+            sprintf('iter=%i,clusters=%i',asd,partition.Length)
+           % plot(W_k);drawnow;
+            plotting(partition);drawnow;
+        end
+    end
+end
+
+end
 % % % % profile off
 % % % profile viewer
 % %%%%%%%%%%%% Slow and simple %%%%%%%%%%%%%%%%
 %% Plotta sista
+function plotter = plotting(partition)
+parameters
 %partition = Hypotheses{5000};
 % Create array of points and corresponding labels
 x_mean = [];
@@ -141,7 +153,7 @@ labels_new = [];
 x_var={};
 for i=1:partition.Length
     
-    if(partition.Clusters{i}.Length>3) % Removes single point clusters, good?
+    if(partition.Clusters{i}.Length>1) % Removes single point clusters, good?
         x_mean=[x_mean partition.Clusters{i}.Mean];
         x_var{length(x_var)+1} = iwishrnd(S_0+partition.Clusters{i}.Sigma,v_0+partition.Clusters{i}.Length-1)/partition.Clusters{i}.Length;
         
@@ -157,7 +169,7 @@ for i=1:partition.Length
     end
 end
 % Plot the new clusters
-figure
+figure(1)
 plotClass(x_new,labels_new);
 hold on
 plot(x_mean(1,:),x_mean(2,:),'x');
@@ -171,3 +183,4 @@ title('Resulting clusters')
 % figure
 % plot(a)
 % title('#Clusters over time')
+end
