@@ -6,7 +6,8 @@ global v_0 S_0 alpha_0 beta_0;
 
 
 N = P_0.Length;
-W_k = ones(N+1,1);
+%W_k = ones(N+1,1);
+W_k = zeros(N+1,1);
 N_1 = N;
 N_0 = 0; % What are N1 N0 ?
 
@@ -32,11 +33,12 @@ for j = 1:N+1
                 
                 % calculate the prodsum
                 W=(gamma(alpha_k))/(beta_k^alpha_k) * (gamma2(v_k/2))/(pi^(c_k-1)*sqrt(c_k)*norm(S_k)^(v_k/2));
-                W_k(j) = W_k(j)  * W;
+                logW=log(W);
+                W_k(j) = W_k(j)  + logW;
             end
         end
     else
-        W_k(j) = 0;
+        W_k(j) = -1e9;
     end
 end
 

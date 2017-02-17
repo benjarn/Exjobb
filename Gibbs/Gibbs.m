@@ -24,7 +24,7 @@ global alpha_0 beta_0;
 alpha_0 = 1;
 beta_0 = 1;
 Hypotheses = {};
-for k=1:12%length(x)
+for k=1:50%length(x)
     N=length(x{k});
     Measurements = Measurements + N;
     % Initialize cluster partition
@@ -126,9 +126,6 @@ for i = 1:1000
         
         % point cannot exist in clusters when this is called
         W_k = evaluateWeights(partition,point,ego_pos{point(3)}); % Returns the weight vector for all partition
-        if(any(isnan(W_k))|| all(W_k==0))
-            pause(0.1);
-        end
         partition = choosePartition(W_k,partition,point); % returns the chosen partition
         if(mod(asd,10)==0)
             sprintf('iter=%i,clusters=%i',asd,partition.Length)
@@ -155,7 +152,7 @@ for i=1:partition.Length
     
     if(partition.Clusters{i}.Length>1) % Removes single point clusters, good?
         x_mean=[x_mean partition.Clusters{i}.Mean];
-        x_var{length(x_var)+1} = iwishrnd(S_0+partition.Clusters{i}.Sigma,v_0+partition.Clusters{i}.Length-1)/partition.Clusters{i}.Length;
+        x_var{length(x_var)+1} = (S_0+partition.Clusters{i}.Sigma)/partition.Clusters{i}.Length;
         
         for j=1:partition.Clusters{i}.Length
             x_new=[x_new partition.Clusters{i}.Points(1:2,j)];
